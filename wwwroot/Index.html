@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        body
+        {
+            background-color: darkslategray;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+    <button onclick="GetData()">GetData</button>
+
+    <button id="myBtn" onclick="writeData()">WriteData</button>
+
+    <input id="myInput" placeholder= "Please Insert Text..." oninput="">
+
+    <script>
+        async function GetData() {
+            await axios.get('/api/ToDoList').then(async function (response) {
+                console.log(response.data);
+            });
+        }
+
+        async function writeData() {
+            let toDoObject = { Id: 51, TaskName: "Tur", TaskDate: "Søndag", Person: "Frank" };
+            const response = await axios.post('/api/ToDoList', toDoObject);
+            console.log(response.data);
+        }
+
+        //var input = document.getElementById("myInput");
+        //input.addEventListener("keyup", function (event)
+        //{
+        //    if (event.keyCode === 13) {
+        //        event.preventDefault();
+        //        document.getElementById("myBtn").click();
+        //    }
+        //});
+    </script>
+</body>
+</html>
