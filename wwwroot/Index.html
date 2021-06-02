@@ -17,13 +17,13 @@
     <button onclick="()">Delete</button>
 
     <button id="myBtn" onclick="writeData()">WriteData</button>
-    <div>
+    
         <input id="idInput" placeholder="Id" >
         <input id="taskNameInput" placeholder="Task" >
         <input id="TaskDateInput" placeholder="Time/Date" >
         <input id="PersonInput" placeholder="Person" >
         
-    </div>
+    
 <script>
         async function GetData() {
             await axios.get('/api/ToDoList').then(async function (response) {
