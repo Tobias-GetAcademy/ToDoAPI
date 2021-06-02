@@ -14,32 +14,34 @@
 <body>
 
     <button onclick="GetData()">GetData</button>
+    <button onclick="()">Delete</button>
 
     <button id="myBtn" onclick="writeData()">WriteData</button>
-
-    <input id="myInput" placeholder= "Please Insert Text..." oninput="">
-
-    <script>
+    <div>
+        <input id="idInput" placeholder="Id" >
+        <input id="taskNameInput" placeholder="Task" >
+        <input id="TaskDateInput" placeholder="Time/Date" >
+        <input id="PersonInput" placeholder="Person" >
+        
+    </div>
+<script>
         async function GetData() {
             await axios.get('/api/ToDoList').then(async function (response) {
                 console.log(response.data);
             });
         }
+        /*
+            public int Id { get; set; }
+            public string TaskName { get; set; }
+            public string TaskDate { get; set; }
+            public string Person { get; set; } 
+        */
 
         async function writeData() {
             let toDoObject = { Id: 51, TaskName: "Tur", TaskDate: "Søndag", Person: "Frank" };
             const response = await axios.post('/api/ToDoList', toDoObject);
             console.log(response.data);
         }
-
-        //var input = document.getElementById("myInput");
-        //input.addEventListener("keyup", function (event)
-        //{
-        //    if (event.keyCode === 13) {
-        //        event.preventDefault();
-        //        document.getElementById("myBtn").click();
-        //    }
-        //});
     </script>
 </body>
 </html>
