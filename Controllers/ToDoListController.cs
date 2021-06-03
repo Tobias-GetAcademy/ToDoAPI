@@ -12,6 +12,14 @@ namespace ToDoAPI.Controllers
     [ApiController]
     public class ToDoListController : ControllerBase
     {
+
+        private TodoList _todoList;
+
+        public ToDoListController(TodoList todoList)
+        {
+            _todoList = todoList;
+        }
+
         // CRUD - Create Read Update Delete
 
         [HttpGet("{id}")]
@@ -43,6 +51,9 @@ namespace ToDoAPI.Controllers
         [HttpDelete]
         public async Task<int> Delete(int id)
         {
+            // finn en bestemt task som har lik id som den du ønsker å slette
+            // https://www.c-sharpcorner.com/UploadFile/mahesh/remove-items-from-a-C-Sharp-list/
+
             return await Task.Run(() => 1);
         }
     }

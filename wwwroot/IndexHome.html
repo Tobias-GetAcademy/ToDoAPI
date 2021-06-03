@@ -14,36 +14,77 @@
 <body>
 
     <button onclick="GetData()">GetData</button>
-    <button onclick="()">Delete</button>
-    <button onclick="()">Delete</button>
+
+    <button onclick="">Delete</button>
+
 
     <button id="myBtn" onclick="writeData()">WriteData</button>
 
-    <div>
-        <input id="idInput" placeholder="Id">
-        <input id="taskNameInput" placeholder="Task">
-        <input id="TaskDateInput" placeholder="Time/Date">
-        <input id="PersonInput" placeholder="Person">
-    </div>
-    
-<script>
+<div id="TextBox">
+    <input id="idInput" placeholder="Id" >
+    <input id="taskNameInput" placeholder="Task" >
+    <input id="TaskDateInput" placeholder="Time/Date">
+    <input id="PersonInput" placeholder="Person">
+</div>
+
+    <div id="ListText"></div>
+
+    <script>
+
+
+
+        let data = [];
+        let html = "";
+        let listText = document.getElementById('ListText');
+
         async function GetData() {
             await axios.get('/api/ToDoList').then(async function (response) {
-                console.log(response.data);
+                data = response.data;
+                updateData();
             });
         }
-        /*
-            public int Id { get; set; }
-            public string TaskName { get; set; }
-            public string TaskDate { get; set; }
-            public string Person { get; set; } 
-        */
+
+        function updateData() {
+            for (i = 0; i < data.length; i++) {
+                html += `
+
+                    <li>${data[i].id} , ${data[i].person}, ${data[i].taskName}, ${data[i].taskDate}
+                        <input type="checkbox" id="finRot" name="something" value="Fin Rot"> </li>`;
+            }
+
+            listText.innerHTML = html;
+        }
+
+
 
         async function writeData() {
-            let toDoObject = { Id: 51, TaskName: "Tur", TaskDate: "Søndag", Person: "Frank" };
+            let id = document.getElementById('idInput').value;
+            let intId = parseInt(id);
+            let taskName = document.getElementById('taskNameInput').value;
+            let taskDate = document.getElementById('TaskDateInput').value;
+            let person = document.getElementById('PersonInput').value;
+
+            let toDoObject =
+            {
+                Id: intId,
+                TaskName: taskName,
+                TaskDate: taskDate,
+                Person: person
+
+            };
+
             const response = await axios.post('/api/ToDoList', toDoObject);
-            console.log(response.data);
+            updateData();
         }
+
+        var elem = document.getElementById("TextBox");
+        elem.onkeyup = function (e) {
+            if (e.keyCode == 13) {
+                writeData();
+                alert("Done!")
+            }
+        }
+
     </script>
 </body>
 </html>
