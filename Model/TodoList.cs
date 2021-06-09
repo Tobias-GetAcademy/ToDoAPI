@@ -1,19 +1,39 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace ToDoAPI.Model
 {
     public class TodoList : List<ToDo>
     {
+
+        public List<ToDo> Data;
+
         public TodoList()
         {
-            this.AddRange(new[]{
-                new ToDo() {Id = 1, TaskName = "Vaske", TaskDate = "20.03.2021", Person = "Tobias"},
-                new ToDo() {Id = 2, TaskName = "lage", TaskDate = "20.04.2021", Person = "Pål"},
-                new ToDo() {Id = 3, TaskName = "Klippe gress", TaskDate = "Mandag", Person = "Per"},
-                new ToDo() {Id = 4, TaskName = "rydde", TaskDate = "Tirsdag", Person = "Olsen"},
-                new ToDo() {Id = 5, TaskName = "handle", TaskDate = "Torsdag", Person = "Ola"},
-                new ToDo() {Id = 6, TaskName = "sove", TaskDate = "Fredag", Person = "Askeladen"}
-            });
+            Data = new List<ToDo>();
+            BuildData();
+            this.AddRange(Data.ToArray());
         }
+
+
+        public ToDo AddToDoTask(ToDo task)
+        {
+            Data.Add(task);
+            return task;
+        }
+
+
+        public void BuildData() => TodoListRepo.TaskList.ToList().ForEach(task => Data.Add(BuildToDo(task)));
+
+
+        public ToDo BuildToDo(string[] current) => new ToDo()
+        {
+            TaskName = current[0], 
+            TaskDate = current[1], 
+            Person   = current[2]
+        };
+
     }
 }

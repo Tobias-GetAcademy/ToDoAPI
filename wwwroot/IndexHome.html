@@ -15,15 +15,14 @@
 
     <button onclick="GetData()">GetData</button>
 
-    <button onclick="">Delete</button>
+    <button id="" onclick="removeItem()">Delete</button>
 
 
     <button id="myBtn" onclick="writeData()">WriteData</button>
 
 <div id="TextBox">
-    <input id="idInput" placeholder="Id" >
-    <input id="taskNameInput" placeholder="Task" >
-    <input id="TaskDateInput" placeholder="Time/Date">
+    <input id="taskNameInput" placeholder="Task" ><br />
+    <input id="TaskDateInput" placeholder="Time/Date"><br/>
     <input id="PersonInput" placeholder="Person">
 </div>
 
@@ -31,11 +30,13 @@
 
     <script>
 
+        let taskName = document.getElementById('taskNameInput').value;
+        let taskDate = document.getElementById('TaskDateInput').value;
+        let person = document.getElementById('PersonInput').value;
 
+        let itemsToDelete = [];
 
         let data = [];
-        let html = "";
-        let listText = document.getElementById('ListText');
 
         async function GetData() {
             await axios.get('/api/ToDoList').then(async function (response) {
@@ -43,42 +44,68 @@
                 updateData();
             });
         }
-
-        function updateData() {
-            for (i = 0; i < data.length; i++) {
-                html += `
-
-                    <li>${data[i].id} , ${data[i].person}, ${data[i].taskName}, ${data[i].taskDate}
-                        <input type="checkbox" id="finRot" name="something" value="Fin Rot"> </li>`;
-            }
-
-            listText.innerHTML = html;
-        }
-
-
-
-        async function writeData() {
-            let id = document.getElementById('idInput').value;
-            let intId = parseInt(id);
-            let taskName = document.getElementById('taskNameInput').value;
-            let taskDate = document.getElementById('TaskDateInput').value;
-            let person = document.getElementById('PersonInput').value;
+        // 
+        async function editData(taskName) {
 
             let toDoObject =
             {
-                Id: intId,
                 TaskName: taskName,
                 TaskDate: taskDate,
                 Person: person
+            };
 
+            await axios.put(`/api/ToDoList/`, toDoObject);
+
+        }
+
+        function updateData() {
+            let html = "";
+
+            for (let i = 0; i < data.length; i++) html += GenerateDOM(data[i], i);
+
+            // Console Log Data From Dataset
+            for (let i = 0; i < data.length; i++) html += console.log(data[i]);
+
+            document.getElementById('ListText').innerHTML = html;
+        }
+
+        function GenerateDOM(data, index) {
+            return `
+                    <li>
+                        ${data.id} , ${data.person}, ${data.taskName}, ${data.taskDate}
+                        <input type="checkbox" id="${index}" onClick="addToDeleteItem('${data.id}')" name="" value=""> 
+                    </li>
+            `;
+        }
+
+        async function addToDeleteItem(id) {
+            itemsToDelete.push(id);
+            console.log(itemsToDelete);
+        }
+
+        async function removeItem() {
+            await axios.delete(`/api/ToDoList/`, { data: { itemsToDelete } });
+            GetData();
+        }
+
+
+        async function writeData() {
+
+            let toDoObject =
+            {
+                TaskName: taskName,
+                TaskDate: taskDate,
+                Person: person
             };
 
             const response = await axios.post('/api/ToDoList', toDoObject);
-            updateData();
+            GetData();
         }
 
+
+
         var elem = document.getElementById("TextBox");
-        elem.onkeyup = function (e) {
+        elem.onkeyup = function(e) {
             if (e.keyCode == 13) {
                 writeData();
                 alert("Done!");

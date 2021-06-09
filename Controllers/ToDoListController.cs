@@ -23,38 +23,48 @@ namespace ToDoAPI.Controllers
         // CRUD - Create Read Update Delete
 
         [HttpGet("{id}")]
-        public async Task<ToDo> GetOne(int id)
+        public async Task<ToDo> GetOne(string id)
         {
             // Where TaskName == "Vaske"
-            return await Task.Run(() => ToDo.ToDoList.FirstOrDefault(x => x.Id == id));
+            return await Task.Run(() => _todoList.FirstOrDefault(x => x.Id == id));
         }
 
         [HttpGet]
         public async Task<IEnumerable<ToDo>> GetMany()
         {
-            return await Task.Run(() => ToDo.ToDoList);
+            return await Task.Run(() => _todoList);
         }
         
         [HttpPost]
-        public async Task<int> Create(ToDo toDo)
+        public async  Task<int> Create(ToDo toDo)
         {
-            ToDo.AddToDoTask(toDo);
+            _todoList.AddToDoTask(toDo);
             return 1;
         }
 
         [HttpPut]
-        public async Task<int> Edit(ToDo ToDo)
+        public async Task<int> Edit(ToDo toDo)
         {
-            return await Task.Run(() => 1);
+            var itemToEdit = await Task.Run(() => _todoList.FirstOrDefault(x => x.Id == toDo.Id));
+            
+            return 1;
         }
 
         [HttpDelete]
-        public async Task<int> Delete(int id)
+        public async Task<int> Delete(string[] delete)
         {
+            foreach (var item in delete)
+            {
+                var itemToRemove = _todoList.Single(todoList => todoList.Id == item);
+                _todoList.Remove(itemToRemove);
+            }
+            
+            await Task.Run(() => _todoList);
             // finn en bestemt task som har lik id som den du ønsker å slette
             // https://www.c-sharpcorner.com/UploadFile/mahesh/remove-items-from-a-C-Sharp-list/
 
-            return await Task.Run(() => 1);
+            
+            return 1;
         }
     }
 }
